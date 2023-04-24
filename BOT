@@ -1,0 +1,53 @@
+import subprocess
+import time
+import pyowm
+import telebot
+from telebot import types
+owm = pyowm.OWM('YOUR API KEY', language='ua')
+token='YOUR TELEGRAM BOT TOKEN '
+
+bot = telebot.TeleBot(token)
+
+@bot.message_handler(commands=['start'])
+def start(message):
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    btn1 = types.KeyboardButton("⚡світло⚡ дома є?")
+    markup.add(btn1)
+    bot.send_message(message.chat.id,
+                     text="Привіт, {0.first_name}! Я тестовий бот для перевірки світла дома, а ще ти можеш дізнатись яка погода в твоєму місті, просто напиши місто".format(
+                         message.from_user), reply_markup=markup)
+
+
+@bot.message_handler(content_types=['text'])
+def func(message):
+    if (message.text == "⚡світло⚡ дома є?"):
+        proc = subprocess.Popen('./svet.sh', stdout=subprocess.PIPE)
+        output = proc.stdout.read()
+        bot.send_message(message.chat.id, text=output)
+
+    else:
+        try:
+            observation = owm.weather_at_place(message.text)
+            weather = observation.get_weather()
+            temp = weather.get_temperature("celsius")["temp"]
+            temp = round(temp)
+            print(time.ctime(), "User id:", message.from_user.id)
+            print(time.ctime(), "Message:", message.text.title(), temp, "C", weather.get_detailed_status())
+
+            answer = "В місті " + message.text.title() + " зараз " + weather.get_detailed_status() + "." + "\n"
+            answer += "Температура около: " + str(temp) + " С" + "\n\n"
+            if temp < -10:
+                answer += "Ах**ть холодно, вдівайся тепліше бо одморозиш все що можна"
+            elif temp < 10:
+                answer += "Холодно, вдівайся тепло."
+            elif temp > 25:
+                answer += "Жара,візьми з собой холодной водички."
+            else:
+                answer += "Нормальок погодка"
+        except Exception:
+            answer = "Місто не знайшов, спробуй ввести заново.\n"
+            print(time.ctime(), "User id:", message.from_user.id)
+            print(time.ctime(), "Message:", message.text.title(), 'Error')
+
+        bot.send_message(message.chat.id, answer)
+bot.polling(none_stop=True)
