@@ -4,7 +4,7 @@ import pyowm
 import telebot
 from telebot import types
 owm = pyowm.OWM('26f1c0c1f4e07a2aedfe989325c14b90', language='ua')
-token='6244102409:AAE1gj2p0XsNonQ6F5HQBc_7u-nv5nR0x0U'
+token='5895864773:AAGoMtgW9nAsiy9OEaRuUBKfGa3c_8XWqAI'
 
 bot = telebot.TeleBot(token)
 @bot.message_handler(commands=['start'])
