@@ -5,9 +5,9 @@ After=network.target
 
 [Service]
 Type=simple
-User=root
-WorkingDirectory=/home/telegram
-ExecStart=/usr/bin/python3 /home/telegram/Prodaktion.py
+User={{ telegram_bot_username }}
+WorkingDirectory={{ telegram_bot_path }}
+ExecStart={{ telegram_bot_path}}/venv/bin/python3 {{ telegram_bot_path}}/Prodaktion.py
 
 RestartSec=10
 Restart=always
