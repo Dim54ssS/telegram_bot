@@ -10,14 +10,14 @@ bot = telebot.TeleBot(token)
 @bot.message_handler(commands=['start'])
 def start_command(message):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    btn1 = types.KeyboardButton("⚡ Світло вдома є?")
+    btn1 = types.KeyboardButton("Світло вдома є?")
     btn2 = types.KeyboardButton("Погода")
     markup.add(btn1, btn2)
     bot.send_message(message.chat.id, "Привіт, я твій новий бот для перевірки світла та погоди", reply_markup=markup)
 
 @bot.message_handler(content_types=['text'])
 def handle_text(message):
-    if message.text == "⚡ Світло вдома є?":
+    if message.text == "Світло вдома є?":
         output = subprocess.run(['./svet.sh'], capture_output=True, text=True).stdout.strip()
         bot.send_message(message.chat.id, text=output)
     elif message.text == "Погода":
