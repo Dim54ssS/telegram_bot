@@ -1,7 +1,4 @@
-import subprocess
-import time
-import pyowm
-import telebot
+import subprocess, time, pyowm, telebot
 from telebot import types
 owm = pyowm.OWM('26f1c0c1f4e07a2aedfe989325c14b90', language='ua')
 token='5895864773:AAGoMtgW9nAsiy9OEaRuUBKfGa3c_8XWqAI'
@@ -45,4 +42,3 @@ def handle_callback(call):
                 bot.send_message(call.message.chat.id, f"Не вдалось отримати погоду для міста {city}. Спробуйте ще раз.")
             bot.edit_message_reply_markup(call.message.chat)
 bot.polling(none_stop=True)
-
